@@ -6,6 +6,10 @@ import BlogSection from "@/components/BlogSection";
 import BlogGrid from "@/components/BlogGrid";
 import Pagination from "@/components/Pagination";
 import Modal from "@/components/Modal";
+import CreatePostButton from "@/components/CreatePostButton";
+import HeroContent from "@/components/HeroContent";
+
+
 
 interface HeroSectionProps {
   onCreatePost: () => void;
@@ -15,7 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCreatePost }) => {
   return (
     <section>
       {/* Hero section content */}
-      <button onClick={onCreatePost}>Create Post</button>
+      <HeroContent onCreatePost={onCreatePost} />
     </section>
   );
 };
@@ -68,6 +72,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <main className="flex-grow">
+
         <HeroSection onCreatePost={() => setShowModal(true)} />
         {isLoading ? (
           <div className="text-center py-8">
@@ -77,7 +82,7 @@ const Index = () => {
           <>
             <BlogSection
               title="Recent blog posts"
-              posts={posts.slice(0, 3)} // Show first 3 posts as recent
+              posts={posts.slice(0, 3)}
               showViewAll
             />
             <BlogGrid posts={posts} />

@@ -14,20 +14,29 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onPostCreated }) => {
     image: null as File | null,
     featured: false,
   });
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement | HTMLTextAreaElement;
-    const files = (e.target as HTMLInputElement).files;
+    const { name, type } = e.target;
+    const value =
+      type === "file"
+        ? (e.target as HTMLInputElement).files?.[0] || null
+        : type === "checkbox"
+        ? (e.target as HTMLInputElement).checked
+        : e.target.value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "file" ? files[0] : type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const data = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "featured") {
         data.append(key, value ? "1" : "0");
@@ -41,14 +50,22 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onPostCreated }) => {
         method: "POST",
         body: data,
       });
+
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error("Failed to create post");
+        console.error("Failed:", result);
+        throw new Error(result.error || "Failed to create post");
       }
+
       toast({
         title: "Success",
         description: "Post created successfully!",
       });
+
+      // Reset form
+      setFormData({ title: "", content: "", image: null, featured: false });
       if (onPostCreated) onPostCreated();
+      onClose();
     } catch (err) {
       toast({
         title: "Error",
@@ -56,6 +73,8 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onPostCreated }) => {
         variant: "destructive",
       });
       console.error("Error creating post:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,14 +124,16 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onPostCreated }) => {
               type="button"
               onClick={onClose}
               className="px-4 py-2 bg-gray-200 rounded-md"
+              disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-brand-green text-white rounded-md"
+              disabled={loading}
             >
-              Post
+              {loading ? "Posting..." : "Post"}
             </button>
           </div>
         </form>
