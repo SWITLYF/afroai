@@ -25,9 +25,15 @@ const Header = () => {
         <Link to="/login" className="text-sm font-medium hover:text-brand-green">LOGIN</Link>
       </nav>
       
-      <Button className="bg-brand-green hover:bg-opacity-90 text-white rounded-md text-sm">
-        GET STARTED
-      </Button>
+
+      <div className='flex gap-2'>
+        <p className='flex items-center text-sm bg-white border border-2-green rounded-full px-4 py-2 cursor-pointer'>
+          LOGIN
+        </p>
+        <p className='flex bg-green-500 text-sm items-center bg-white border border-2-green rounded-full px-4 py-2 cursor-pointer'>
+          GET STARTED
+        </p>
+      </div>
     </header>
   );
 };
