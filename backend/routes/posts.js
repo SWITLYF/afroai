@@ -1,3 +1,5 @@
+// backend/routes/posts.js
+
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
@@ -17,14 +19,9 @@ router.post("/create", upload.single("image"), (req, res) => {
   const featured = req.body.featured === "1" ? 1 : 0;
   const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-  console.log({ title, content, imageUrl, featured }); // Debug logging
-
   const sql = "INSERT INTO posts (title, content, image, featured) VALUES (?, ?, ?, ?)";
   db.query(sql, [title, content, imageUrl, featured], (err, result) => {
-    if (err) {
-      console.error("DB Insert Error:", err);
-      return res.status(500).json({ error: "Database error", details: err });
-    }
+    if (err) return res.status(500).json({ error: "Database error", details: err });
     res.json({ success: true, id: result.insertId });
   });
 });
@@ -49,9 +46,12 @@ router.get("/", (req, res) => {
         const formattedPosts = results.map((post) => ({
           id: post.id.toString(),
           title: post.title,
-          excerpt: post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content,
+          content: post.content,
+          excerpt:
+            post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content,
           date: new Date().toLocaleDateString(),
           image: post.image ? `http://localhost:5000${post.image}` : undefined,
+          featured: post.featured,
           author: {
             name: "Anonymous",
             avatar: "/default-avatar.png",
@@ -84,15 +84,39 @@ router.get("/:id", (req, res) => {
     res.json({
       id: post.id.toString(),
       title: post.title,
-      excerpt: post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content,
+      excerpt:
+        post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content,
       content: post.content,
       date: new Date().toLocaleDateString(),
       image: post.image ? `http://localhost:5000${post.image}` : undefined,
+      featured: post.featured,
       author: { name: "Anonymous", avatar: "/default-avatar.png" },
       category: "General",
       readingTime: "5 min",
       tags: ["blog", "post"],
     });
+  });
+});
+
+// Update post
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, content, featured } = req.body;
+
+  const sql = "UPDATE posts SET title = ?, content = ?, featured = ? WHERE id = ?";
+  db.query(sql, [title, content, featured, id], (err, result) => {
+    if (err) return res.status(500).json({ error: "Failed to update post", details: err });
+    res.json({ success: true });
+  });
+});
+
+// Delete post
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM posts WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ error: "Failed to delete post", details: err });
+    res.json({ success: true });
   });
 });
 

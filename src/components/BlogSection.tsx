@@ -16,7 +16,7 @@ const BlogSection = ({ title, posts, showViewAll = false }: BlogSectionProps) =>
   if (!posts.length) {
     return (
       <div className="py-8 px-4 md:px-8 lg:px-16">
-        <h2 className="text-xl md:text-2xl font-semibold mb-6">{title}</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">{title}</h2>
         <p className="text-gray-600">No recent posts available.</p>
       </div>
     );
@@ -24,19 +24,24 @@ const BlogSection = ({ title, posts, showViewAll = false }: BlogSectionProps) =>
 
   return (
     <div className="py-8 px-4 md:px-8 lg:px-16">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold">{title}</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
         {showViewAll && (
-          <Button variant="ghost" className="text-brand-green hover:text-brand-green hover:bg-gray-100">
+          <Button
+            variant="ghost"
+            className="text-teal-600 font-medium hover:text-teal-600 hover:bg-gray-100"
+          >
             View all <ArrowRight size={16} className="ml-1" />
           </Button>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1">
+      <div className="flex flex-start flex-col md:flex-row gap-6">
+        {/* Featured Blog Post (Left) */}
+        <div className="md:w-1/2">
           {featuredPost && <BlogCard post={featuredPost} featured />}
         </div>
-        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Smaller Blog Previews (Right, Stacked Vertically) */}
+        <div className="md:w-1/2 flex flex-col gap-4">
           {regularPosts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
