@@ -1,7 +1,6 @@
 // components/ui/HeroContent.tsx
 
 import React from "react";
-import CreatePostButton from "./CreatePostButton";
 
 interface HeroContentProps {
   onCreatePost: () => void;
@@ -10,11 +9,13 @@ interface HeroContentProps {
 const HeroContent: React.FC<HeroContentProps> = ({ onCreatePost }) => {
   return (
     <div className="text-center py-10">
-      <h1 className="text-4xl font-bold mb-4">Welcome to the Blog</h1>
-      <p className="mb-6 text-gray-600">
-        Share your thoughts and read from others.
-      </p>
-      <CreatePostButton onClick={onCreatePost} />
+      <div className="text-4xl font-bold flex align-center justify-center gap-4">
+        <h1>STORIES</h1>
+        <h1 className="text-teal-500">AND</h1>
+        <h1>PROMPT</h1>
+      </div>
+      <br />
+      <p>Subscribe to learn about new product features, the latest in technology, <br /> solutions and updates.</p>
     </div>
   );
 };

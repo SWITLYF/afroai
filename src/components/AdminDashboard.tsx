@@ -1,7 +1,7 @@
-// components/AdminDashboard.tsx
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import CreatePostButton from "./CreatePostButton";
+import Modal from "./Modal"; // ✅ Import your Modal component
 
 interface Post {
   id: string;
@@ -15,6 +15,7 @@ interface Post {
 const AdminDashboard: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false); // ✅ State to control modal
 
   useEffect(() => {
     fetchPosts();
@@ -77,11 +78,30 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleCreatePost = () => {
+    setShowModal(true); // ✅ Open the modal
+  };
+
+  const handlePostCreated = () => {
+    setShowModal(false);
+    fetchPosts(); // ✅ Refresh posts after creation
+  };
+
   if (loading) return <p className="text-center mt-10">Loading posts...</p>;
 
   return (
     <div className="p-8">
-      <h2 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold">Admin Dashboard</h2>
+        <CreatePostButton onClick={handleCreatePost} />
+      </div>
+
+      {/* ✅ The Modal for Creating Posts */}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onPostCreated={handlePostCreated}
+      />
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300">

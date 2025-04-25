@@ -67,8 +67,8 @@ const BlogCard = ({ post, featured = false }: BlogCardProps) => {
       </div>
     </div>
   ) : (
-    <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
-      <div className="relative h-24 overflow-hidden">
+    <div className="bg-white rounded-lg overflow-hidden border flex  gap-4 border-gray-200">
+      <div className="relative h-[180px] w-80 bg-cover overflow-hidden"> 
         {post.image ? (
           <img
             src={post.image}
@@ -81,7 +81,7 @@ const BlogCard = ({ post, featured = false }: BlogCardProps) => {
           </div>
         )}
       </div>
-      <div className="p-3">
+      <div className="p-3 flex flex-col justify-between">
         <div className="flex items-center text-xs text-teal-600 font-medium mb-2">
           <span>{post.author.name} • </span>
           <span className="flex items-center">
