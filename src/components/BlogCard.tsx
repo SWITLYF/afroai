@@ -57,13 +57,6 @@ const BlogCard = ({ post, featured = false }: BlogCardProps) => {
             </span>
           ))}
         </div>
-        <Link
-          to={`/blog/${post.id}`}
-          className="flex items-center text-teal-600 font-medium text-sm"
-        >
-          <span className="mr-1">Read more</span>
-          <ArrowRight size={16} />
-        </Link>
       </div>
     </div>
   ) : (

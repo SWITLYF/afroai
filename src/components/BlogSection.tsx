@@ -2,6 +2,7 @@ import React from "react";
 import BlogCard, { BlogPostType } from "./BlogCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // ✅
 
 type BlogSectionProps = {
   title: string;
@@ -10,6 +11,8 @@ type BlogSectionProps = {
 };
 
 const BlogSection = ({ title, posts, showViewAll = false }: BlogSectionProps) => {
+  const navigate = useNavigate(); // ✅
+
   const featuredPost = posts[0];
   const regularPosts = posts.slice(1, 3);
 
@@ -30,18 +33,17 @@ const BlogSection = ({ title, posts, showViewAll = false }: BlogSectionProps) =>
           <Button
             variant="ghost"
             className="text-teal-600 font-medium hover:text-teal-600 hover:bg-gray-100"
+            onClick={() => navigate("/all-posts")} // ✅ Navigate
           >
             View all <ArrowRight size={16} className="ml-1" />
           </Button>
         )}
       </div>
       <div className="flex flex-start flex-col md:flex-row gap-6">
-        {/* Featured Blog Post (Left) */}
-        <div className="md:w-1/2">
+        <div className="md:w-2/5">
           {featuredPost && <BlogCard post={featuredPost} featured />}
         </div>
-        {/* Smaller Blog Previews (Right, Stacked Vertically) */}
-        <div className="md:w-1/2 flex flex-col gap-4">
+        <div className="md:w-3/5 flex flex-col gap-4">
           {regularPosts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
